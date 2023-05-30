@@ -1,1 +1,42 @@
 
+Traffic rule	MTL Representation	Legal Reference	Note
+ego shall not overtake another vehicle if a pedestrian crosswalk is in front of the other vehicle.	G(~overtake(ego, other_vehicle) -> in_front_of(other_vehicle,crosswalk))	VCoRT:Article 11.9	
+before overtaking vehicle in front ego shall make sure that other vehicle in behind did not already started to overtake the ego.	G(P[0,t](~overtake(vehicle_behind,ego) -> (in_front_of(ego,vehicle_in_front) & overtake(ego,vehicle_in_front))))		
+if there is a traffic light on the ego lane and the traffic color is red, the ego vehicle shall not exceed the stop lane.	G(traffic_light(ego, red) & in_front(stop_line,ego) ⇒ ~exceed_stop_line(ego))	VCoRT:Article 23.1 (a)	
+Do not overtake a vehicle on its right side, except in congested traffic, where overtaking on the right is also allowed.	~overtake_right(ego,other) U (congested_traffic -> overtake_right(ego,other))	VCoRT:Article 11.1, 11.6	
+If the ego vehicle is not part of congestion or if the directly leading vehicle is not standing, then stopping on the main carriage way, shoulder lane, or ramps is forbidden.	G(~congestion(ego) & (~standing(leading) -> ~(stop_main_carriageway(ego) | stop_shoulder_lane(ego) | stop_ramps(ego))))	StVO: § 18 Rn. 22, § 12(1), § 18(8)	
+Making U-turns and reversing is prohibited by ego vehicle.	G((~u_turn(ego) | (~ reverse(ego))	StVO: § 18 (7)	
+if Ego vehicle in front of other vehicle then it must not brake suddenly without a compelling reason.	G(in_front_of(ego,other)-> ~sudden_braking(ego)	StVO: § 4 (1)	
+If ego vehicle wants to change lanes, turn, or overtake, they should use their turn signals beforehand.	F(change_lanes(ego) | turn(ego) | overtake(ego)) -> F(use_turn_signals(ego)) 	StVO: § 9	condition in past and ramification in present
+The ego vehicle has to stop with respect to a stop sign (sign 206) before it enters the intersection at least for a duration of tslw in front of the associated stop line.	G(at_intersection(ego) & at_traffic_sign(ego,206))-> G[0,t]in_standstill(ego)	StVO: § 8	
+If ego Vehicle is driving behind another vehicle then it must maintain a safe distance until ego can overtake the other vehicle safely.	G(behind(ego,other) -> F(safe_distance(ego,other) U overtake(ego,other)))	stvo §5	
+ego vehicle shall not overtake the vehicle in front until vehichle behind the ego is overtaking the ego vehicle.	~overtake(ego,front_vehicle) U overtake(back,ego)	VCoRT: article. 11(2)(a)	
+At intersections and junctions, ego must yield to vehicles coming from right side of ego, provided there is no traffic sign number 306 in front of ego.	G(at_intersection(ego) | at_junction(ego) -> (yield(ego,other) & ~in_front_of(ego, sign_306)))	StVO: § 8	
+on the special driveway only prescribed vehicle are allowed to pass and if ego is not prescribed Vehicle it should not travel om special driveway.	G(only_prescribed_vehicles_on_special_driveway & (~ego_prescribed_vehicle -> ~travel_on_special_driveway(ego)))		
+It is always the case that if the other vehicle is to the left of the ego vehicle and the ego vehicle drives faster than the other vehicle, then the ego vehicle is to the right of a broad lane marking and the other vehicle is to the left of a solid lane marking.	G((left_of(other,ego) & drives_faster(ego,other)) -> (right_of_broad_marking(ego) & left_of_broad_marking(other)))		
+the ego vehicle passes a stop line if the stop line is in front of the ego vehicle and is not in front of it at next time step.	( pass_stop_line(ego) -> (stop_line_in_front(ego) & X(~stop_line_in_front(ego)))		
+ego vehicle enters the icey road then from next time ego must slow down untill there is no bad road.	icey_road(ego) -> X(drives_slowly(ego )U ~icey_road(ego)		
+if ego vehicle is turning left and other vehicle is going to turn right or other vehicle is onto the oncoming lane then in this case ego shall always yield to other vehicle provided there is no relevent traffic light for ego.	(turn_left(ego) & (turn_right(other) | oncoming_lane(other)) & ~traffic_light(ego)) -> yield(ego,other)	StVO: § 9 (4)	
+	Alternate:G(yield(ego,other)) -> (turn_left(ego) & (turn_right(other) | oncoming_lane(other)) & ~traffic_light(ego))		
+if ego vehicle is turning left and there is no relevent traffic light for the ego and other vehicle is going to turn right or going straight and other vehicle is onto the oncoming lane of ego then in this case ego shall yield to other vehicle.	G((turning_left(ego) & ~traffic_light(ego) & going_right_or_straight(other) & oncoming_lane(other, ego)) -> yield(ego, other))	StVO: § 9 (4)	
+At intersections and junctions ego must yield to the other vehicles coming from right side of ego.	G((at_intersection(ego) | at_junction(ego)) & right_of(other,ego)-> yield(ego,other))	StVO: § 8	
+ego vehicle will not exceed the speed limit of the lane it is driving on and it will not exceed the maximum velocity allowed for its vehicle type and ego will not exceed the speed limit such that it can no longer react to traffic regulations and restrictions.	G(keep_lane_speed_limit(ego) & keep_vehicle_type_limit(ego) & keep_braking_speed_limit(ego))	VcCoRT: Article 13(5)	
+At intersections if there is another vehicle in right of ego then ego must yield to other vehicle, provided there is no traffic sign number 306 in front of ego.	G((at_intersection(ego) & right_of(other,ego) )->( yield(ego, other) & ~at_traffic_sign(ego, 306)))	StVO: § 8	
+If ego vehicle wants to overtake the other vehicle then it should use turn signals beforehand for t seconds.	G(overtake(ego,other)-> P[0,t]turn_signal(ego))		
+At intersections and junctions if there is another vehicle in right of ego and there is no traffic light in front of ego then ego must yield to other vehicle, provided there is no traffic sign number 206 in front of ego.	G(at_intersection(ego) & right_of(other,ego)&~in_front_of(ego, sign_206)-> (yield(ego,other) ))	StVO: § 8	
+At intersections and junctions ego must yield to the other vehicles coming from right side of ego.	G(at_intersection(ego) & right_of(other,ego) -> (yield(ego,other)))	StVO: § 8	
+At intersections without stop or yield signs, yield to other traffic participants already in the intersection or just entering the intersection.	"G(at_intersection(ego) & ~traffic_sign(ego,stop) & ~traffic_sign(ego,yield) ->
+  (P[0,t]in_intersection(traffic) ->
+  yield(ego,other)))"	DMV:page 47 (intersection)	
+At intersections without stop or yield signs, yield to the vehicle on your right if it reaches the intersection at the same time as you.	"G(at_intersection(ego) & at_intersection(other) ~traffic_sign(ego,stop) & ~traffic_sign(ego,yield) ->
+  (P[0,t]in_intersection(traffic) ->
+  yield(ego,other)))"""	DMV:page 47 (intersection)	
+During overtaking, a sufficient lateral distance must be kept from other road users, particularly pedestrians and pedal cyclists.	same as safe distance rule mentioned above, only ist for pedestrian and earlier it was just denoted with other	stvo §5(4)	
+at the intersection where the stop sign is placed, ego shall stop before entering the  intersection and give way to vehicles on the road they are approaching.	G((at_intersection(ego) & traffic_sign(ego, stop)) ->(yield(ego,other)))	VCoRT: Article 10	logic need to know what does it mean by approaching
+ego vehicle is on the road and there is a continuous line present on the road, then the ego vehicle must not cross or straddle the continuous line.	G(lane_marking(ego,solidLine) -> ~crossing_line(ego) & ~straddle_line(ego))	stvo: Annex 1(69)(1)	
+If traffic is moving slowly, vehicles must not enter an intersection or junction, even if they have the right of way or the traffic lights are green, if by doing so they would be forced to wait there.	"G((at_congestion(ego) & (~yield(ego,other) | traffic_sign(ego,green))) ->
+  ~in_intersection(ego))"	stvo: §11(1)	
+At intersections with traffic lights, drivers must stop at a red light and may proceed at a green light.	G((at_intersection(ego) & traffic_light(ego,red) ->F(stop(ego))) ∧ (traffic_light(ego,green) -> F(proceed(ego))))		
+"At ‘T’ intersections without ‘STOP’ or ‘YIELD’
+signs, yield to traffic and pedestrians on the through
+road. They have the right-of-way"		DMV:page 47 (T)-Intersection	
