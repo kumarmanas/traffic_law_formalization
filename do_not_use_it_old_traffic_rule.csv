@@ -39,4 +39,4 @@ If traffic is moving slowly, vehicles must not enter an intersection or junction
 At intersections with traffic lights, drivers must stop at a red light and may proceed at a green light.	G((at_intersection(ego) & traffic_light(ego,red) ->F(stop(ego))) ∧ (traffic_light(ego,green) -> F(proceed(ego))))		
 "At ‘T’ intersections without ‘STOP’ or ‘YIELD’
 signs, yield to traffic and pedestrians on the through
-road. They have the right-of-way"		DMV:page 47 (T)-Intersection	
+road. They have the right-of-way"		DMV (USA):page 47 (T)-Intersection	
